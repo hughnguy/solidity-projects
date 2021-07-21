@@ -1,0 +1,7 @@
+{
+  "name": "solidity-projects",
+  "version": "0.1.0",
+  "dependencies": {
+    "truffle": "^5.4.1"
+  }
+}
