@@ -8,11 +8,25 @@ smartContract.initWeb3();
 
 function App() {
 
+  const walletAllowance = async (ether) => {
+    const contract = smartContract.getContract(Contracts.HughCoin);
+    const account = await smartContract.getAccount();
+    const erc20WalletAddress = smartContract.getAddress(Contracts.ERC20Wallet);
+    const result = await contract.approve(erc20WalletAddress, SmartContract.toWei(ether.toString())).send({from: account});
+  };
+
+  const readBalance = async () => {
+    const contract = smartContract.getContract(Contracts.ERC20Wallet);
+    const account = await smartContract.getAccount();
+    const result = await contract.readEthBalance(account).call();
+    return SmartContract.fromWei(result);
+  };
+
   const test = async () => {
     test2();
-    const contract = await smartContract.getContract(Contracts.Adoption);
+    const contract = smartContract.getContract(Contracts.Adoption);
     const account = await smartContract.getAccount();
-    const result = await contract.adopt(0, {from: account});
+    const result = await contract.adopt(0).send({from: account});
     console.log(result)
   };
 
@@ -23,7 +37,7 @@ function App() {
   };
 
   return (
-    <div className="App" onClick={test}>
+    <div className="App" onClick={() => walletAllowance(10)}>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
